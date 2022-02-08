@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, RefreshControl } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl, Text } from "react-native";
 import ExpenseCard from "./expense-card";
 import ExpenseService from "../../src/services/expenseService";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../UI/headerButtons'
 import Utils from "../../src/utils";
+import Toast from 'react-native-toast-message';
 
 const itemAttribute = {
   expenseId: 0,
@@ -26,86 +27,79 @@ const itemAttribute = {
 
 const Expenses = (props) => {
 
+  // const reloadPage = props.navigation.getParam('reload');
+  // console.log('[Reload]  ',reloadPage)
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [next, setNext] = useState(null);
 
   useEffect(() => {
+    console.log('[Reloading to show added expense ...]');
     getUserExpenses();
   }, []);
 
   useEffect(() => {
-    if(next){
+    console.log('[next token]  ', next)
+    if (next) {
       getUserExpenses();
-    }    
+    }
   }, [loading]);
 
-
-  const getUserExpenses = () => {
+  const getUserExpenses = async () => {
     //setRefresh(true);
-    Utils.getData('@loggedInUser').then(value => {
-      const user = JSON.parse(value);
-      const nextToken = getNextToken();
-      ExpenseService.getUserExpenses({
-        userId: `user_${user.sub}`,
-        startKey: nextToken
-      })
-        .then(res => {
-          
-          let data = items;
-          if(res.data.expenses && loading){
-            res.data.expenses.forEach(expense => {
-              data.push(expense);
-            });
-          } else {
-            data = res.data.expenses;
-          }
-          setItems(data);
-          setNext(res.data.nextToken);
-         
-          //setLoading(false);
-        })
-        .catch(err => console.log('Error fetching response ::: ', err)).finally(() => {
-          setRefresh(false);
-          setLoading(false);
-        });
+    let user, data;
+    await Utils.getData('@loggedInUser').then(value => {
+      user = JSON.parse(value);
     });
+
+    await ExpenseService.getUserExpenses({
+      userId: user.userId,
+      startKey: next
+    })
+      .then(res => {
+        let data = items.length > 0 ? items : [];
+
+        if (res.data.expenses) {
+          res.data.expenses.forEach(expense => {
+            data.push(expense);
+          });
+        }
+        setItems(data);
+        setNext(() => res.data.nextToken);
+      })
+      .catch(err => console.log('Error fetching response ::: ', err)).finally(() => {
+        setRefresh(false);
+        setLoading(false);
+      });
+
   }
 
-  const getNextToken = () => {
-    console.log('[Refresh Reload]  =>  '  ,refresh, loading)
-    if(refresh){
-      return null;
-    }
-    if(loading){
-      return next;
-    }
-    return null;
-  }
+  // const getNextToken = () => {
+  //   return next;
+  // }
 
-  const reload = async () => {
-    console.log('[Refreshing ...]')
-    setRefresh(true);
-    setTimeout(() => {
-      console.log(refresh);
-      getUserExpenses();
-      setRefresh(true);
-    }, 1000);
+  // const reload = async () => {
+  //   console.log('[Refreshing ...]')
+  //   setRefresh(true);
+  //   setTimeout(() => {
+  //     console.log(refresh);
+  //     getUserExpenses();
+  //     setRefresh(true);
+  //   }, 1000);
 
-  };
+  // };
 
   const loadMore = () => {
     console.log('[Loading more items ...]');
     setLoading(true);
-    //getUserExpenses();
-    //setLoading(false);
   };
 
   return (
     <View style={styles.expenseContainer}>
-      <FlatList
-        //refreshing={refresh}
+      {items.length > 0 && (<FlatList
+        refreshing={refresh}
         //onRefresh={getUserExpenses()}
         onEndReached={() => loadMore()}
         onEndReachedThreshold={0}
@@ -124,7 +118,8 @@ const Expenses = (props) => {
             navigation={props.navigation}
           />
         )}
-      />
+      />)}
+      <Toast />
     </View>
   );
 };
@@ -136,15 +131,18 @@ const styles = StyleSheet.create({
   },
 });
 
-Expenses.navigationOptions = {
-  headerTitle: 'Your Expenses',
-  headerStyle: {
-    backgroundColor: 'purple'
-  },
-  headerTintColor: 'white',
-  headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton}>
-    <Item title="Create Expense" iconName="add-circle-sharp" onPress={() => console.log("button clicked")}></Item>
-  </HeaderButtons>
+Expenses.navigationOptions = navData => {
+  return {
+    headerTitle: 'Your Expenses',
+    headerStyle: {
+      backgroundColor: 'purple'
+    },
+    headerTintColor: 'white',
+    headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton}>
+      <Item title="Create Expense" iconName="add-circle-sharp" onPress={() => navData.navigation.navigate({ routeName: 'AddExpense' })}></Item>
+    </HeaderButtons>
+  }
+
 }
 
 export default Expenses;

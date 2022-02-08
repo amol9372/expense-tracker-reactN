@@ -5,6 +5,7 @@ import constants from "../../src/constants";
 import Utils from "../../src/utils";
 import { useState } from "react/cjs/react.development";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { withBadge, Badge } from "react-native-elements";
 
 const ExpenseCard = (props) => {
 
@@ -36,10 +37,18 @@ const ExpenseCard = (props) => {
     const users = props.stakeholders.users;
     if (users) {
       const stakeholderStatus = users[0].stakeholderStatus;
-      return `You ${stakeholderStatus.status} ₹${stakeholderStatus.amount}`;
+      const color = stakeholderStatus.status === 'self' ? 'green' : 'red'
+      const balanceStyle = {
+        fontSize: 11,
+        textAlign: 'center',
+        color: color,
+        fontWeight: 'bold'    
+      }
+      return (<Text style={balanceStyle}>{`You ${stakeholderStatus.status} ₹${stakeholderStatus.amount}`}</Text>)
+
     }
 
-    return 'No Balance';
+    //return <Text style={styles.balance}>{'No Balance'}</Text>;
   }
 
   return (
@@ -63,7 +72,7 @@ const ExpenseCard = (props) => {
         </Text>
       </View>
       <View>
-        <Text style={styles.time}>{getBalance()}</Text>
+        {getBalance()}
       </View>
     </View>
     </TouchableOpacity> 
@@ -108,7 +117,12 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 11,
-    textAlign: "center"
+    textAlign: "center",
+  },
+  balance : {
+    fontSize: 11,
+    textAlign: 'center',
+    color: 'green'
   }
 });
 

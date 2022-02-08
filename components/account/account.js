@@ -17,5 +17,12 @@ const styles = StyleSheet.create({
    },
 });
 
+Account.navigationOptions = {
+   headerTitle: 'Account',
+   headerStyle: {
+       backgroundColor: 'purple'
+   },
+   headerTintColor: 'white'
+}
 
 export default Account;

@@ -8,12 +8,26 @@ import ExpenseDetail from "../components/expense-card/expenseDetail";
 import { Ionicons } from '@expo/vector-icons'
 
 import Expenses from "../components/expense-card/expenses";
-import GoalHome from "../components/goalhome";
+import AddExpense from "../components/expense-card/addExpense";
+import Buddy from "../components/buddies/buddy";
 
 const ExpenseNavigator = createStackNavigator({
    Expenses: Expenses,
-   GoalHome: GoalHome,
-   Detail: ExpenseDetail
+   Detail: ExpenseDetail,
+   AddExpense: AddExpense,
+   Buddies: Buddy,
+   Account: Account
+}, {
+   defaultNavigationOptions: {
+      headerStyle: {
+         backgroundColor: 'purple'
+      },
+      headerTintColor: 'white'
+   }
+});
+
+const buddyNavigator = createStackNavigator({
+   Buddies: Buddy,
 }, {
    defaultNavigationOptions: {
       headerStyle: {
@@ -40,6 +54,16 @@ const TabNavigator = createBottomTabNavigator({
          }
       }
    },
+
+   Buddies: {
+      screen: buddyNavigator, navigationOptions:
+      {
+         tabBarIcon: (tabInfo) => {
+            return <Ionicons name="person-outline" size={24} color={tabInfo.tintColor}></Ionicons>
+         },
+      }
+   },
+
    Account: {
       screen: Account, navigationOptions:
       {
