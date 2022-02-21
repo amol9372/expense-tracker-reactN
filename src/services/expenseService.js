@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { TRACKER_APP_URL } from '@env'
 import Constants from '../constants'
+import Utils from "../utils";
 
 axios.defaults.headers.common["X-Requested-With"] = 'XmlHttpRequest';
 
@@ -17,20 +18,21 @@ class ExpenseService {
     static async getUserExpenses(data) {
 
         let response;
-        //console.log('[Get User Expenses]', data);
+        console.log('[Get User Expenses]', data);
 
+        const session = await Utils.getUserSession();
+        console.log();
         const config = {
             headers: {
                 Accept: 'application/json',
                 "Content-Type": 'application/json',
-                // Authorization: "JWT ".concat(data.access_token),
+                Authorization: session.idToken.jwtToken,
             },
         };
 
         try {
             require('axios-debug-log/enable');
-            console.log('[Get User Expenses]', data);
-            //console.log("URL ::: ", TRACKER_APP_URL, Constants.endponts.getUserExpenses);
+            console.log("URL ::: ", TRACKER_APP_URL, Constants.endponts.getUserExpenses);
             axios.defaults.baseURL = TRACKER_APP_URL;
             const res = await axios.post(Constants.endponts.getUserExpenses, data, config);
 
@@ -53,17 +55,18 @@ class ExpenseService {
 
         let response;
         console.log('[Save User Expenses]', data);
-
+        const session = await Utils.getUserSession();
         const config = {
             headers: {
                 Accept: 'application/json',
                 "Content-Type": 'application/json',
-                // Authorization: "JWT ".concat(data.access_token),
+                Authorization: session.idToken.jwtToken,
             },
         };
 
         try {
             console.log("URL ::: ", TRACKER_APP_URL, Constants.endponts.getUserExpenses)
+            axios.defaults.baseURL = TRACKER_APP_URL;
             const res = await axios.post(Constants.endponts.saveUserExpenses, data, config);
 
             if (res.status === 200) {

@@ -6,6 +6,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../UI/headerButtons'
 import Utils from "../../src/utils";
 import Toast from 'react-native-toast-message';
+import { Button } from "react-native-elements/dist/buttons/Button";
 
 const itemAttribute = {
   expenseId: 0,
@@ -27,7 +28,7 @@ const itemAttribute = {
 
 const Expenses = (props) => {
 
-  // const reloadPage = props.navigation.getParam('reload');
+  //const reloadPage = props.navigation.getParam('reload');
   // console.log('[Reload]  ',reloadPage)
 
   const [items, setItems] = useState([]);
@@ -36,9 +37,11 @@ const Expenses = (props) => {
   const [next, setNext] = useState(null);
 
   useEffect(() => {
-    console.log('[Reloading to show added expense ...]');
-    getUserExpenses();
-  }, []);
+    console.log('[Refreshing to show added expense ...]');
+    if(refresh) {
+      getUserExpenses();
+    }
+  }, [refresh]);
 
   useEffect(() => {
     console.log('[next token]  ', next)
@@ -47,8 +50,12 @@ const Expenses = (props) => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    console.log('[Reloading ...]');
+    getUserExpenses();
+  }, []);
+
   const getUserExpenses = async () => {
-    //setRefresh(true);
     let user, data;
     await Utils.getData('@loggedInUser').then(value => {
       user = JSON.parse(value);
@@ -76,31 +83,45 @@ const Expenses = (props) => {
 
   }
 
-  // const getNextToken = () => {
-  //   return next;
-  // }
-
-  // const reload = async () => {
-  //   console.log('[Refreshing ...]')
-  //   setRefresh(true);
-  //   setTimeout(() => {
-  //     console.log(refresh);
-  //     getUserExpenses();
-  //     setRefresh(true);
-  //   }, 1000);
-
-  // };
 
   const loadMore = () => {
     console.log('[Loading more items ...]');
     setLoading(true);
   };
 
+  const refreshExpenses = () => {
+    console.log('[Refreshing ...]');
+    setItems([]);
+    setRefresh(true);
+  };
+
   return (
     <View style={styles.expenseContainer}>
+      <Button
+        activeOpacity={1}
+        icon={{
+          name: 'refresh',
+          type: 'font-awesome',
+          size: 15,
+          color: 'white',
+        }}
+        buttonStyle={{
+          backgroundColor: 'purple',
+          borderRadius: 7,
+        }}
+        containerStyle={{
+          width: 60,
+          marginHorizontal: 10,
+          padding: 10,
+          position: "relative",
+          alignSelf: "flex-end"
+
+        }}
+        onPress={() => refreshExpenses()}
+      />
       {items.length > 0 && (<FlatList
         refreshing={refresh}
-        //onRefresh={getUserExpenses()}
+        onRefresh={() => refreshExpenses()}
         onEndReached={() => loadMore()}
         onEndReachedThreshold={0}
         keyExtractor={item => item.expenseId}
@@ -126,7 +147,7 @@ const Expenses = (props) => {
 
 const styles = StyleSheet.create({
   expenseContainer: {
-    marginTop: 40,
+    marginTop: 5,
     marginBottom: 10,
   },
 });

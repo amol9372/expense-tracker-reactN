@@ -1,9 +1,11 @@
 {
   "expo": {
-    "scheme" : "myapp",
-    "name": "DoneWithIt",
-    "slug": "DoneWithIt",
+    "scheme": "et",
+    "name": "Expense Tracker",
+    "slug": "expense-tracker",
     "version": "1.0.0",
+    "privacy" : "public",
+    "platforms" : ["android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,7 +26,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.darkseid.expensetracker",
+      "versionCode" : 1,
+      "useNextNotificationsApi": true,
+      "permissions" : [] 
     },
     "web": {
       "favicon": "./assets/favicon.png"

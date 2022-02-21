@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { USER_SERVICE_URL } from '@env'
 import Constants from '../constants'
+import Utils from "../utils";
 
 axios.defaults.headers.common["X-Requested-With"] = 'XmlHttpRequest';
 
@@ -19,11 +20,12 @@ class UserService {
         let response;
         console.log('[Get User Details] ::: ', userId);
 
+        const session = await Utils.getUserSession();
         const config = {
             headers: {
                 Accept: 'application/json',
                 "Content-Type": 'application/json',
-                // Authorization: "JWT ".concat(data.access_token),
+                Authorization: session.idToken.jwtToken,
             },
         };
 

@@ -15,9 +15,12 @@ const Signout = () => {
   }
 
   return (
-    <View>
+    <View style={styles.button}>
       {isSignedIn ? (
-        <Button onPress={signOut} title="Signout" />
+        <Button onPress={signOut} title="Signout" buttonStyle={{
+          backgroundColor: 'purple',
+          borderRadius: 7,
+        }} />
       ) : (
         <Text>Welcome User</Text>
       )}
@@ -27,9 +30,8 @@ const Signout = () => {
 
 const styles = StyleSheet.create({
   button: {
-    width: 50,
-    borderRadius: 3,
-    borderBottomColor: "green",
+    width: 100,
+    borderRadius: 8,
   },
 });
 

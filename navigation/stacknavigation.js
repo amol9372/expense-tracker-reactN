@@ -37,6 +37,17 @@ const buddyNavigator = createStackNavigator({
    }
 });
 
+const AccountNavigator = createStackNavigator({
+   Account: Account,
+}, {
+   defaultNavigationOptions: {
+      headerStyle: {
+         backgroundColor: 'purple'
+      },
+      headerTintColor: 'white'
+   }
+});
+
 const TabNavigator = createBottomTabNavigator({
    Home: {
       screen: ExpenseNavigator, navigationOptions:
@@ -46,26 +57,26 @@ const TabNavigator = createBottomTabNavigator({
          }
       }
    },
-   Groups: {
-      screen: Account, navigationOptions:
-      {
-         tabBarIcon: (tabInfo) => {
-            return <Ionicons name="people-outline" size={30} color={tabInfo.tintColor}></Ionicons>
-         }
-      }
-   },
+   // Groups: {
+   //    screen: Account, navigationOptions:
+   //    {
+   //       tabBarIcon: (tabInfo) => {
+   //          return <Ionicons name="people-outline" size={30} color={tabInfo.tintColor}></Ionicons>
+   //       }
+   //    }
+   // },
 
-   Buddies: {
-      screen: buddyNavigator, navigationOptions:
-      {
-         tabBarIcon: (tabInfo) => {
-            return <Ionicons name="person-outline" size={24} color={tabInfo.tintColor}></Ionicons>
-         },
-      }
-   },
+   // Buddies: {
+   //    screen: buddyNavigator, navigationOptions:
+   //    {
+   //       tabBarIcon: (tabInfo) => {
+   //          return <Ionicons name="person-outline" size={24} color={tabInfo.tintColor}></Ionicons>
+   //       },
+   //    }
+   // },
 
    Account: {
-      screen: Account, navigationOptions:
+      screen: AccountNavigator, navigationOptions:
       {
          tabBarIcon: (tabInfo) => {
             return <Ionicons name="person-circle-outline" size={30} color={tabInfo.tintColor}></Ionicons>

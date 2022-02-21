@@ -1,11 +1,12 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "aws-export": "echo 'Update Expo AWS_EXPORTS secret with value: \n\n' && cat src/aws-exports.js |base64",
+    "eas-build-pre-install": "echo $AWS_EXPORTS | base64 -di > ./src/aws-exports.js"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
@@ -14,14 +15,17 @@
     "@react-native-picker/picker": "2.1.0",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "aws-amplify": "^4.3.10",
-    "aws-amplify-react-native": "^6.0.1",
+    "amazon-cognito-identity-js": "^5.2.6",
+    "aws-amplify": "^4.3.14",
+    "aws-amplify-react-native": "^6.0.2",
     "axios": "^0.24.0",
     "axios-debug-log": "^0.8.4",
     "expo": "~43.0.2",
     "expo-linking": "~2.4.2",
     "expo-modules-core": "~0.4.10",
+    "expo-notifications": "~0.13.3",
     "expo-status-bar": "~1.1.0",
+    "expo-updates": "~0.10.15",
     "expo-web-browser": "~10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -41,7 +45,8 @@
     "react-navigation": "^4.4.4",
     "react-navigation-header-buttons": "^8.0.0",
     "react-navigation-stack": "^2.10.4",
-    "react-navigation-tabs": "^2.11.1"
+    "react-navigation-tabs": "^2.11.1",
+    "expo-permissions": "~13.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

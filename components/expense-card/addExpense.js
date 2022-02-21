@@ -29,20 +29,13 @@ const selectionHandler = new SelectionHandler({ maxMultiSelect: 4, allowDeselect
 const AddExpense = (props) => {
 
     const [stakeholdersInitial, setStakeholdersInitial] = useState(null);
-    const [stakeholders, setStakeholders] = useState(null);
+    const [stakeholders, setStakeholders] = useState([]);
     const [stakeholdersLoaded, setStakeholdersLoaded] = useState(false);
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
     const [cost, setCost] = useState("");
     const [open, isOpen] = useState(false);
     const [paidBy, setPaidBy] = useState(null);
-
-    // const [isLiked, setIsLiked] = useState([
-    //     { id: 1, value: true, name: "Yes", selected: true },
-    //     { id: 2, value: false, name: "No", selected: false },
-    //     { id: 3, value: false, name: "Something", selected: false }
-    // ]);
-
     const [paidByList, setPaidByList] = useState(null);
 
     // const { validate, isFieldInError, getErrorsInField, getErrorMessages } =
@@ -61,7 +54,8 @@ const AddExpense = (props) => {
     const getFriends = async () => {
         const user = await Utils.getData('@loggedInUser');
         const userObject = JSON.parse(user);
-        const friends = userObject.friends;
+        //console.log('[user details] ::: ',userObject);
+        const friends = userObject.friends === null ? [] : userObject.friends;
         const stakeholders = friends.map(friend =>
             ({ optionText: friend.email, value: friend.userId }),
         );
@@ -74,20 +68,15 @@ const AddExpense = (props) => {
 
         setPaidByList(payers);
         setStakeholdersInitial(stakeholders);
-        setStakeholders(stakeholders);
         setStakeholdersLoaded(true);
     }
 
     const itemSelectedHandler = (item, allSelectedItems) => {
         setStakeholders(allSelectedItems);
-        console.log("selection data")
-        console.log(item, allSelectedItems);
     }
 
     const itemDeselectedHandler = (item, allSelectedItems) => {
         setStakeholders(allSelectedItems);
-        console.log("Deselection data")
-        console.log(item, allSelectedItems);
     }
 
     const renderButton = (data, index, isSelected, onPress) => {
@@ -121,9 +110,17 @@ const AddExpense = (props) => {
 
         await Utils.getData('@loggedInUser').then(value => {
             const user = JSON.parse(value);
-            console.log('[paidby list] ::: ',paidByList)
             const paidByUser = paidByList.filter(item => item.selected === true)[0];
             stakeholders.push({optionText : user.email, value: user.userId})
+
+            let amount = parseFloat(cost) / stakeholders.length;
+
+            if(stakeholders.length === 1 && paidByUser.id != user.email){
+                console.log('[paid by someone else without any stake]'); 
+                stakeholders.push({optionText : paidByUser.id, value: paidByUser.value})
+                amount = parseFloat(cost);
+            }
+
             let stakeholdersdb;
             if (stakeholders) {
                 stakeholdersdb = stakeholders.map(item =>
@@ -131,8 +128,8 @@ const AddExpense = (props) => {
                     userId: item.value,
                     email: item.optionText,
                     stakeholderStatus: {
-                        status: stakeholders.length === 1 ? 'self' : item.optionText === paidByUser.id ? 'lent' : 'owes',
-                        amount: parseFloat(cost) / stakeholders.length
+                        status: stakeholders.length === 1 ? 'self' : item.optionText === paidByUser.id ? 'lent' : 'owe',
+                        amount: amount
                     }
                 })
                 )
@@ -171,7 +168,7 @@ const AddExpense = (props) => {
     }
 
     return (
-        <ScrollView>
+        // <ScrollView>
             <View style={styles.form}>
 
                 <Input placeholder='Name of Expense' onChangeText={(text) => setName(text)} value={name} />
@@ -252,7 +249,7 @@ const AddExpense = (props) => {
                 />
 
             </View>
-        </ScrollView>
+        // </ScrollView>
     )
 }
 

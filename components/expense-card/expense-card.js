@@ -37,14 +37,26 @@ const ExpenseCard = (props) => {
     const users = props.stakeholders.users;
     if (users) {
       const stakeholderStatus = users[0].stakeholderStatus;
-      const color = stakeholderStatus.status === 'self' ? 'green' : 'red'
+      let color, text;
+      if(stakeholderStatus.status === 'lent'){
+        color = 'green';
+        text = `You ${stakeholderStatus.status} ₹${stakeholderStatus.amount}`
+      } else if(stakeholderStatus.status === 'owe'){
+        color = 'red';
+        text = `You ${stakeholderStatus.status} ₹${stakeholderStatus.amount}`
+      } else if(stakeholderStatus.status === 'self'){        
+        color = 'grey';
+        text = 'No Balance'
+      }
+
       const balanceStyle = {
-        fontSize: 11,
+        fontSize: 12,
         textAlign: 'center',
         color: color,
         fontWeight: 'bold'    
       }
-      return (<Text style={balanceStyle}>{`You ${stakeholderStatus.status} ₹${stakeholderStatus.amount}`}</Text>)
+
+      return (<Text style={balanceStyle}>{text}</Text>)
 
     }
 
@@ -52,7 +64,7 @@ const ExpenseCard = (props) => {
   }
 
   return (
-   <TouchableOpacity activeOpacity={0.7} onPress={() => props.navigation.navigate({routeName : 'Detail', params: {id : props.id} })}>
+  //  <TouchableOpacity activeOpacity={0.7} onPress={() => props.navigation.navigate({routeName : 'Detail', params: {id : props.id} })}>
     <View style={styles.card}>
       <Image source={category} style={styles.photo} />
       <View>
@@ -75,7 +87,7 @@ const ExpenseCard = (props) => {
         {getBalance()}
       </View>
     </View>
-    </TouchableOpacity> 
+    // </TouchableOpacity> 
   );
 };
 

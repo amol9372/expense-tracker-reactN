@@ -16,10 +16,26 @@ module.exports = {
         parking: require('../assets/appicons/parking.png'),
         general: require('../assets/appicons/general.png'),
     },
+    avatars: {
+        spiderman: require('../assets/appicons/superhero-icons/spiderman.png'),
+        batman: require('../assets/appicons/superhero-icons/batman.png'),
+        ironman: require('../assets/appicons/superhero-icons/ironman.png'),
+        ironman2: require('../assets/appicons/superhero-icons/ironman2.png'),
+        wolverine: require('../assets/appicons/superhero-icons/wolverine.png'),
+        captianamerica: require('../assets/appicons/superhero-icons/captianamerica.png'),
+        joker: require('../assets/appicons/superhero-icons/joker.png'),
+        deadpool: require('../assets/appicons/superhero-icons/deadpool.png'),
+        caps: require('../assets/appicons/superhero-icons/caps.png'),
+        fury: require('../assets/appicons/superhero-icons/fury.png'),
+        spideyface: require('../assets/appicons/superhero-icons/spideyface.png'),
+        hulk: require('../assets/appicons/superhero-icons/hulk.png'),
+        ww2: require('../assets/appicons/superhero-icons/ww2.png'),
+        supes: require('../assets/appicons/superhero-icons/supes.png'),
+    },
     expenseCategories: [
         {
             label: 'Coffee', value: 'coffee',
-            
+
         },
         {
             label: 'Chai', value: 'chai',
@@ -47,6 +63,6 @@ module.exports = {
         },
     ],
 
-    
+
 
 }
