@@ -139,10 +139,10 @@ const AddExpense = (props) => {
                 cost: parseFloat(cost),
                 name: name,
                 category: category,
-                paidBy: paidByUser.id,
+                paidBy: paidByUser.value,
                 createdBy: user.email,
                 stakeholders: {
-                    paidBy: paidByUser.id,
+                    paidBy: paidByUser.value,
                     users: stakeholdersdb
                 }
             }

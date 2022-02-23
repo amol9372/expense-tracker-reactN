@@ -83,7 +83,6 @@ const Expenses = (props) => {
 
   }
 
-
   const loadMore = () => {
     console.log('[Loading more items ...]');
     setLoading(true);
