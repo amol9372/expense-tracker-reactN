@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, AppRegistry } from "react-native";
 import { Divider } from "react-native-elements/dist/divider/Divider";
 import Utils from "../../src/utils";
 import Signout from '../signout'

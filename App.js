@@ -10,7 +10,6 @@ import UserService from './src/services/userService'
 import { StatusBar } from "expo-status-bar";
 import * as Notification from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
-import { SafeAreaView } from "react-native-safe-area-context";
 import { addNotificationsDroppedListener } from "expo-notifications";
 import { AmplifyTheme } from "aws-amplify-react-native";
 
@@ -63,25 +62,25 @@ const App = () => {
   }, [])
 
   // Get Permissions for notications
-  useEffect(() => {
-    Permissions.getAsync(Permissions.NOTIFICATIONS).then(status => {
-      if (status.status !== 'granted') {
-        return Permissions.askAsync(Permissions.NOTIFICATIONS);
-      }
-      return status;
-    }).then(status => {
-      if (status.status !== 'granted') {
-        throw new Error('Permissions not granted');
-      }
-    }).then(() => {
-      return Notification.getExpoPushTokenAsync();
-    }).then((res) => {
-      console.log(res); 
-    })
-    .catch(err => {
-      return null;
-    });
-  }, [])
+  // useEffect(() => {
+  //   Permissions.getAsync(Permissions.NOTIFICATIONS).then(status => {
+  //     if (status.status !== 'granted') {
+  //       return Permissions.askAsync(Permissions.NOTIFICATIONS);
+  //     }
+  //     return status;
+  //   }).then(status => {
+  //     if (status.status !== 'granted') {
+  //       throw new Error('Permissions not granted');
+  //     }
+  //   }).then(() => {
+  //     return Notification.getExpoPushTokenAsync();
+  //   }).then((res) => {
+  //     console.log(res); 
+  //   })
+  //   .catch(err => {
+  //     return null;
+  //   });
+  // }, [])
 
 
   // Receive notifications

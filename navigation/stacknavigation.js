@@ -10,13 +10,15 @@ import { Ionicons } from '@expo/vector-icons'
 import Expenses from "../components/expense-card/expenses";
 import AddExpense from "../components/expense-card/addExpense";
 import Buddy from "../components/buddies/buddy";
+import Invite from "../components/buddies/invite";
 
 const ExpenseNavigator = createStackNavigator({
    Expenses: Expenses,
    Detail: ExpenseDetail,
    AddExpense: AddExpense,
    Buddies: Buddy,
-   Account: Account
+   Account: Account,
+   Invite: Invite
 }, {
    defaultNavigationOptions: {
       headerStyle: {
@@ -66,14 +68,14 @@ const TabNavigator = createBottomTabNavigator({
    //    }
    // },
 
-   // Buddies: {
-   //    screen: buddyNavigator, navigationOptions:
-   //    {
-   //       tabBarIcon: (tabInfo) => {
-   //          return <Ionicons name="person-outline" size={24} color={tabInfo.tintColor}></Ionicons>
-   //       },
-   //    }
-   // },
+   Buddies: {
+      screen: buddyNavigator, navigationOptions:
+      {
+         tabBarIcon: (tabInfo) => {
+            return <Ionicons name="person-outline" size={24} color={tabInfo.tintColor}></Ionicons>
+         },
+      }
+   },
 
    Account: {
       screen: AccountNavigator, navigationOptions:

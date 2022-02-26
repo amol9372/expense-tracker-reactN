@@ -1,37 +1,84 @@
-import { View, Text, TextInput, StyleSheet, Image, Alert } from "react-native";
-import React, { useState } from "react";
+import { View, StyleSheet, AppRegistry } from "react-native";
+import React, { useEffect, useState } from "react";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../UI/headerButtons'
+import { Avatar, ListItem } from "react-native-elements";
+import constants from "../../src/constants";
+import UserService from "../../src/services/userService";
+import Utils from "../../src/utils";
+
+const buddyAttribute = {
+    userId: "",
+    name: "",
+    email: "",
+    avatar: "",
+    balance: {
+        amount: Number.NaN,
+        status: ""
+    }
+}
 
 const Buddy = (props) => {
 
-    const [items, setItems] = useState([{}]);
+    const [items, setItems] = useState([buddyAttribute]);
+
+    useEffect(() => {
+
+        getFriendsBalances();
+
+    }, []);
+
+    const getFriendsBalances = async () => {
+        let user
+        await Utils.getData('@loggedInUser').then(value => {
+            user = JSON.parse(value);
+        });
+
+        if (user.friends) {
+            setItems(user.friends);
+
+            let itemstemp = items;
+
+            UserService.getUserFriendsBalance(user.userId).then(res => {
+                if (res.data) {
+                    itemstemp.forEach(item => {
+                        item.balance = res.data.filter(resItem => item.userId === resItem.userId)[0].balance; 
+                    });
+                    setItems(itemstemp);
+                }
+            })
+                .catch(err => console.log('[Error in fetching data] ::: ', err))
+        }
+    }
 
     return (
-        <View style={styles.form}>
-            <Text>Amol Singh</Text>
-            {/* <FlatList
-                refreshing={refresh}
-                //onRefresh={getUserExpenses()}
-                onEndReached={() => loadMore()}
-                onEndReachedThreshold={0}
-                keyExtractor={item => item.expenseId}
-                data={items}
-                renderItem={(item) => (
-                    <ExpenseCard
-                        key={item.item.id}
-                        id={item.item.expenseId}
-                        name={item.item.name}
-                        paidBy={item.item.paidBy}
-                        stakeholders={item.item.stakeholders}
-                        createdDate={item.item.createdDate}
-                        category={item.item.category}
-                        cost={item.item.cost}
-                        navigation={props.navigation}
-                    />
-                )}
-            /> */}
-        </View>)
+        <View>
+            {items.length > 0 && items.map((item) => (<ListItem key={item.userId} bottomDivider>
+                <Avatar size={45} source={constants.avatars[item.avatar]} rounded key={item.userId} containerStyle={{
+                    borderColor: 'black',
+                    borderStyle: 'solid',
+                    borderWidth: 0.5,
+                }} />
+                <ListItem.Content>
+                    <ListItem.Title style={{ fontWeight : 'bold', fontSize: 22 }}>
+                        {item.name}
+                    </ListItem.Title>
+                    <ListItem.Subtitle>{item.email}</ListItem.Subtitle>
+                </ListItem.Content>
+                <ListItem.Content right>
+                    {item.balance &&
+                        <>
+                            <ListItem.Title right style={{ color: item.balance.status == 'Owes You' ? 'green' : 'red',fontWeight : 'bold' }}>
+                                {item.balance && item.balance.status}
+                            </ListItem.Title>
+                            <ListItem.Subtitle right>
+                                {item.balance && item.balance.amount}
+                            </ListItem.Subtitle>
+                        </>}
+                </ListItem.Content>
+            </ListItem>))}
+        </View>
+    )
 
 }
 
@@ -43,21 +90,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: '#FFF',
     },
-    icon: {
-        height: 20,
-        width: 20,
-        marginRight: 10
-    },
-    button: {
-        margin: 10,
-        padding: 8,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
+    list: {
+        marginTop: 20,
+        borderTopWidth: 1,
+        //borderColor: colors.greyOutline,
     },
 });
 
-Buddy.navigationOptions = navData => { 
+Buddy.navigationOptions = navData => {
     return {
         headerTitle: 'Buddies',
         headerStyle: {
@@ -67,7 +107,9 @@ Buddy.navigationOptions = navData => {
         headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item title="Add people" iconName='person-add' onPress={() => console.log('[inviting buddy ...]')}></Item>
         </HeaderButtons>
-    }    
+    }
 }
 
 export default Buddy;
+
+AppRegistry.registerComponent('AndroidFonts', () => Buddy);

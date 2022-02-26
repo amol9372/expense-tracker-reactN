@@ -3,7 +3,9 @@ module.exports = {
     endponts: {
         getUserExpenses: '/expense/user',
         saveUserExpenses: '/expense/create',
-        getUserDetails: '/user'
+        getUserDetails: '/user',
+        getUserFriendsBalance: '/user/friends/balances',
+        inviteUser: '/user/invite'
     },
     categories: {
         groceries: require('../assets/appicons/groceries.png'),

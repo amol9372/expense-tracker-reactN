@@ -18,10 +18,12 @@ const ExpenseCard = (props) => {
       await Utils.getData('@loggedInUser').then(user => {
         user = JSON.parse(user);
         if (user) {
-          if (user.email === props.paidBy) {
+          if (user.userId === props.paidBy) {
             payer = 'You';
           } else {
             payer = props.paidBy;
+            const name = user.friends.filter(friend => friend.userId === payer)[0].name;
+            payer = name;
           }
           const paidByString = `${payer} paid ₹${props.cost}`;
           setPaidBy(paidByString);
