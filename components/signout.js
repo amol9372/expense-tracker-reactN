@@ -1,6 +1,7 @@
 import { Auth } from "aws-amplify";
 import React, { useState } from "react";
-import { Button, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Button } from "react-native-elements";
 
 const Signout = () => {
   const [isSignedIn, signedIn] = useState(true);

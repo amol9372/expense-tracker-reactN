@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import Amplify from "aws-amplify";
+import { Amplify } from '@aws-amplify/core'
+// import { Auth } from '@aws-amplify/auth'
+// import { Analytics } from '@aws-amplify/analytics'
 import awsconfig from "./src/aws-exports";
 import { withAuthenticator } from "aws-amplify-react-native/dist/Auth";
 import { Button, StyleSheet, Text, View } from "react-native";
@@ -12,6 +14,8 @@ import * as Notification from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { addNotificationsDroppedListener } from "expo-notifications";
 import { AmplifyTheme } from "aws-amplify-react-native";
+import * as Linking from 'expo-linking'
+
 
 Amplify.configure({
   ...awsconfig,
@@ -40,17 +44,76 @@ const triggerHandler = async () => {
   })
 }
 
+
 const App = () => {
 
   const [user, setUser] = useState(null);
+  const [deeplinkData, setDeepLinkData] = useState(null);
+
+  const checkInvite = async (data) => {
+    if (data && data.queryParams && Object.keys(data.queryParams).length > 0) {
+      console.log('Data has params')
+
+      confirmInvite(data.queryParams);  
+    }
+           
+  }
+
+  const confirmInvite = async (params) => {
+
+    const user = await Utils.getLoggedInUser();
+    const userId = `user_${user.sub}`;
+
+    const request = {
+      invitedBy: {
+        userId: params.invitedBy,
+        name: params.name,
+        email: params.email
+      },
+      userId: userId
+    }
+
+    UserService.confirmInvite(request);
+  }
+
+  const handleDeepLink = (event) => {
+    let data = Linking.parse(event.url);
+    setDeepLinkData(() => data);
+    // console.log('[Deeplink data]', data);
+    checkInvite(data);
+
+  }
 
   useEffect(() => {
+
+    const getInitialUrl = async () => {
+      const initialUrl = await Linking.getInitialURL();
+      if (initialUrl) {
+        var data = Linking.parse(initialUrl);
+        setDeepLinkData(() => data);
+        checkInvite(data);
+      }
+    }
+
+    Linking.addEventListener("url", handleDeepLink);
+
+    if (!deeplinkData) {
+      getInitialUrl();
+    }
+
+    return (() => {
+      Linking.removeEventListener("url");
+    })
+  }, [])
+
+  useEffect(() => {
+
     const init = async () => {
       console.log('[Saving loggedIn user to Async storage]')
       const user = await Utils.getLoggedInUser();
       const userId = `user_${user.sub}`;
       await UserService.getUserDetails(userId).then(res => {
-        setUser(res.data);
+        //setUser(res.data);
         Utils.storeData('@loggedInUser', JSON.stringify(res.data));
 
         setUser(user);
@@ -75,6 +138,7 @@ const App = () => {
   //   }).then(() => {
   //     return Notification.getExpoPushTokenAsync();
   //   }).then((res) => {
+  //     // TODO: save expo token
   //     console.log(res); 
   //   })
   //   .catch(err => {

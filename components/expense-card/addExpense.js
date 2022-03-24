@@ -168,7 +168,7 @@ const AddExpense = (props) => {
     }
 
     return (
-        // <ScrollView>
+        <ScrollView>
             <View style={styles.form}>
 
                 <Input placeholder='Name of Expense' onChangeText={(text) => setName(text)} value={name} />
@@ -249,7 +249,7 @@ const AddExpense = (props) => {
                 />
 
             </View>
-        // </ScrollView>
+        </ScrollView>
     )
 }
 

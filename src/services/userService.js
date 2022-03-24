@@ -116,6 +116,70 @@ class UserService {
         return response;
     }
 
+    static async confirmInvite(data) {
+        let response;
+        console.log('[Confirm Invite] ::: ', data);
+
+        const session = await Utils.getUserSession();
+        const config = {
+            headers: {
+                Accept: 'application/json',
+                "Content-Type": 'application/json',
+                Authorization: session.idToken.jwtToken,
+            },
+        };
+
+        try {
+            const endPoint = Constants.endponts.confirmInvite
+                
+            console.log('URL ::: ', USER_SERVICE_URL, endPoint);
+            axios.defaults.baseURL = USER_SERVICE_URL;
+            const res = await axios.post(endPoint, data,config);
+
+            if (res.status === 200) {
+                //console.log(res.data);
+                response = Response(res);
+            }
+
+        } catch (error) {
+            response = error;
+        }
+
+        return response;
+    }
+
+    static async settleBalance(data) {
+        let response;
+        console.log('[Settle Balance] ::: ', data);
+
+        const session = await Utils.getUserSession();
+        const config = {
+            headers: {
+                Accept: 'application/json',
+                "Content-Type": 'application/json',
+                Authorization: session.idToken.jwtToken,
+            },
+        };
+
+        try {
+            const endPoint = Constants.endponts.settleBalance
+                
+            console.log('URL ::: ', USER_SERVICE_URL, endPoint);
+            axios.defaults.baseURL = USER_SERVICE_URL;
+            const res = await axios.post(endPoint, data,config);
+
+            if (res.status === 200) {
+                //console.log(res.data);
+                response = Response(res);
+            }
+
+        } catch (error) {
+            response = error;
+        }
+
+        return response;
+    }
+
 }
 
 export default UserService;

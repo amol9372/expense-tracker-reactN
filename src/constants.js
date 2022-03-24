@@ -5,7 +5,9 @@ module.exports = {
         saveUserExpenses: '/expense/create',
         getUserDetails: '/user',
         getUserFriendsBalance: '/user/friends/balances',
-        inviteUser: '/user/invite'
+        inviteUser: '/user/invite',
+        confirmInvite: '/user/confirm-invite',
+        settleBalance: '/user/friends/balance/settle'
     },
     categories: {
         groceries: require('../assets/appicons/groceries.png'),

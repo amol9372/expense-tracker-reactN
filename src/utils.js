@@ -1,4 +1,5 @@
-import { Auth } from "aws-amplify";
+import { Amplify }  from '@aws-amplify/core';
+import { Auth }  from '@aws-amplify/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Utils {
